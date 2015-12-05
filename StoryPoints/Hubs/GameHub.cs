@@ -12,6 +12,7 @@ namespace StoryPoints.Hubs
     {
         public static ConcurrentDictionary<string, Game> games;
         public static ConcurrentDictionary<string, PlayerConnection> connections;
+        public static ConcurrentDictionary<string, Player> disconPlayers;
 
         public void NewConnection(string url)
         {
@@ -64,14 +65,40 @@ namespace StoryPoints.Hubs
 
         public override System.Threading.Tasks.Task OnDisconnected(bool stopCalled)
         {
-            if (stopCalled)
+            PlayerConnection pc = connections[Context.ConnectionId];
+            //disconnect player
+            Player p = games[pc.groupId].players[pc.pcid];
+
+            if (!stopCalled)
             {
-                //disconnect               
+                //store player for possible reconnect
+                //  disconPlayers.TryAdd(Context.ConnectionId, p);
+            }
+
+
+            PlayerConnection garbage;
+            Player trash;
+            //Remove player connection for the player
+            connections.TryRemove(Context.ConnectionId, out garbage);
+
+            if (p.connections.Count == 1)
+            {
+                //remove player
+                games[pc.groupId].players.TryRemove(pc.pcid, out trash);
             }
             else
             {
-                //store player for possible reconnect
+                //remove disconnected connection
+                games[pc.groupId].players[pc.pcid].connections.Remove(Context.ConnectionId);
             }
+
+            //if no more players in game remove game
+            if (games[pc.groupId].players.Count == 0)
+            {
+                Game garbageGame;
+                games.TryRemove(pc.groupId, out garbageGame);
+            }
+
 
             return base.OnDisconnected(stopCalled);
         }
