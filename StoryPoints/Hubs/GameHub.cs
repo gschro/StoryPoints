@@ -13,6 +13,7 @@ namespace StoryPoints.Hubs
         public static ConcurrentDictionary<string, Game> games;
         public static ConcurrentDictionary<string, PlayerConnection> connections;
         public static ConcurrentDictionary<string, Player> disconPlayers;
+        public static ConcurrentDictionary<string, DateTime> timeouts;
 
         public void NewConnection(string url)
         {
@@ -73,8 +74,9 @@ namespace StoryPoints.Hubs
             {
                 //store player for possible reconnect
                 //  disconPlayers.TryAdd(Context.ConnectionId, p);
+                //set time out to look for reconnection
+                //timeouts.TryAdd(Context.ConnectionId, new DateTime());
             }
-
 
             PlayerConnection garbage;
             Player trash;
@@ -107,8 +109,45 @@ namespace StoryPoints.Hubs
         {
             PlayerConnection pc = connections[Context.ConnectionId];
             games[pc.groupId].players[pc.pcid].name = name;
-            Clients.Group(pc.groupId).showPlayers();
             //send name to all clients
+            Clients.Group(pc.groupId).showPlayers(games[pc.groupId].players);
+        }
+
+        public void Reset()
+        {
+            PlayerConnection pc = connections[Context.ConnectionId];
+            if (games[pc.groupId].players[pc.pcid].role.Equals("moderator")) { 
+                Clients.Group(pc.groupId).reset();
+            }
+        }
+
+        public void FlipCards()
+        {
+            PlayerConnection pc = connections[Context.ConnectionId];
+            if (games[pc.groupId].players[pc.pcid].role.Equals("moderator"))
+            {
+                Clients.Group(pc.groupId).flipCards();
+            }
+        }
+
+        public void HandOffModerator(string pcid)
+        {
+            PlayerConnection pc = connections[Context.ConnectionId];
+            if (games[pc.groupId].players[pc.pcid].role.Equals("moderator"))
+            {
+                games[pc.groupId].players[pcid].role = "moderator";
+                Player newMod = games[pc.groupId].players[pcid];
+                foreach (string conn in newMod.connections)
+                {
+                    Clients.Client(conn).isModerator();
+                }
+
+                games[pc.groupId].players[pc.pcid].role = "player";
+                foreach(string conn in games[pc.groupId].players[pc.pcid].connections)
+                {
+                    Clients.Client(conn).isPlayer();
+                }
+            }
         }
 
         private void tryAddGame(string gameId)
