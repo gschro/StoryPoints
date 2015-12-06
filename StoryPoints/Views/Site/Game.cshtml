@@ -7,11 +7,36 @@
 <h2>Game</h2>
 
 <div class="row">
-    <div class="col-md-12"></div>
-</div>
+    <div class="col-md-2 players-col">
+        <div class="row">
+            <div class="col-md-12">
+                <ul id="players"></ul>
+            </div>
+        </div>
+    </div>
 
-<div class="row">
-    <div class="col-md-12"></div>
+    <div class="col-md-10 game-col">
+        <div class="row mod-row">
+            <div class="col-md-12">
+                <button id="flip" class="btn btn-primary"></button>
+                <button id="reset" class="btn btn-warning"></button>
+                <button id="save" class="btn btn-success integration"></button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <div id="score"></div>
+            </div>
+            <div class="col-md-10">
+                <div id="card-options"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="game-board"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
