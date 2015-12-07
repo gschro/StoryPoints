@@ -21,7 +21,11 @@ namespace StoryPoints.Hubs
             PlayerConnection pc = new PlayerConnection();
             pc.pcid = Context.ConnectionId;///unique id that matches player id
             pc.groupId = url;
-
+            
+            if(connections == null)
+            {
+                connections = new ConcurrentDictionary<string, PlayerConnection>();
+            }
             //Add new connection to list of all connections
             connections.TryAdd(Context.ConnectionId, pc);
 
@@ -152,8 +156,12 @@ namespace StoryPoints.Hubs
 
         private void tryAddGame(string gameId)
         {
+            if(games == null)
+            {
+                games = new ConcurrentDictionary<string, Game>();
+            }
             //If the game doesn't exist create it
-            if (games != null && !games.ContainsKey(gameId))
+            if (!games.ContainsKey(gameId))
             {
                 games.TryAdd(gameId, new Game() { gameId = gameId });
             }

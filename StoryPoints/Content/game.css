@@ -1,0 +1,26 @@
+﻿.card-options{
+
+}
+
+.card-container{
+    border: solid 4px #00ffff;
+    border-radius: 5px;
+    display: inline-block;
+    padding: 30px 0px 30px 0px;
+    text-align: center;
+    font-size: 40px;
+    font-weight: bold;
+    width: 80px;
+    margin: 3px;
+}
+
+.card-container:hover{
+    background-color: lightgreen;
+    cursor: pointer;
+}
+
+.card-selected{
+    position: relative;
+    top: -20px;
+    background-color: lightgreen;
+}

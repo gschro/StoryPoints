@@ -1,17 +1,32 @@
 ﻿var stories = {};
 var deck = {};
 deck.cards = {
-    1: { id: 1, displayValue: .5, value: .5, color: blue },
-    2: { id: 2, displayValue: 1, value: .5, color: blue },
-    3: { id: 3, displayValue: 2, value: .5, color: blue },
-    4: { id: 4, displayValue: 3, value: .5, color: blue },
-    5: { id: 5, displayValue: 5, value: .5, color: blue },
-    6: { id: 6, displayValue: 8, value: .5, color: blue },
-    7: { id: 7, displayValue: 13, value: .5, color: blue },
-    8: { id: 8, displayValue: 20, value: .5, color: blue },
-    9: { id: 9, displayValue: 40, value: .5, color: blue },
-    10: { id: 10, displayValue: 100, value: .5, color: blue },
-    11: { id: 11, displayValue: P, value: .5, color: blue }
+    //1: { id: 1, displayValue: "1/2", value:.5, color: "blue" },
+    2: { id: 2, displayValue: "1", value:.5, color: "blue" },
+    3: { id: 3, displayValue: "2", value:.5, color: "blue" },
+    4: { id: 4, displayValue: "3", value:.5, color: "blue" },
+    5: { id: 5, displayValue: "5", value:.5, color: "blue" },
+    6: { id: 6, displayValue: "8", value:.5, color: "blue" },
+    7: { id: 7, displayValue: "13", value:.5, color: "blue" },
+    8: { id: 8, displayValue: "20", value:.5, color: "blue" },
+    9: { id: 9, displayValue: "40", value:.5, color: "blue" },
+    10: { id: 10, displayValue: "100", value:.5, color: "blue" },
+    11: { id: 11, displayValue: "P", value:.5, color: "blue" }
+}
+
+displayCardOptions(deck.cards);
+
+function displayCardOptions(cards){
+    for (var card in cards) {
+        if (deck.cards.hasOwnProperty(card)) {        
+            $('#card-options').append(createCard(cards[card].id, cards[card].displayValue));
+        }
+    }
+    $('#card-options .card-back').addClass('hidden');
+}
+
+function createCard(id, display) {
+    return $('<div class="card-container" value="'+id+'"><div class="card-front">'+display+'</div><div class="card-back">SP</div></div>');
 }
 
 $(function () {
@@ -59,6 +74,18 @@ $(function () {
             hub.server.handOffModerator($(e.target).val());
         });
     });
+});
+
+$(document).ready(function () {
+    $(document).on('click', '.card-container, .card-front', function (e) {
+        $('.card-container').removeClass('card-selected');
+        var $card = $(e.target);
+        console.log('in ' + $card);
+        if (!$card.hasClass('card-container')) {
+            $card = $card.parent();
+        }
+        $card.addClass('card-selected');
+    })
 });
 
 function reset() {
