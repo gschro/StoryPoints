@@ -34,7 +34,14 @@ $(function () {
     var hub = $.connection.gameHub;    
 
     hub.client.getName = function () {
-        //Get Name Modal
+        //Show Name Modal
+        $('#nameModal').modal({
+            keyboard: false,
+            backdrop: 'static'
+        });
+        $('#nameModal').on('shown.bs.modal', function () {
+            $('#name').focus();
+        })
     }
 
     hub.client.flipCards = function () {
@@ -55,14 +62,19 @@ $(function () {
 
     hub.client.showPlayers = function (players) {
         //Show connected players
+        showPlayers(players);
     }
         
     // Start the connection.
     $.connection.hub.start().done(function () {
         hub.server.newConnection(window.location.pathname);
         $('#nameModalOk').click(function () {
-            //close modal
-            hub.server.setName($('#displayname').val());
+            sendName(hub);
+        });
+        $('#name').keyup(function (e) {
+            if (e.keyCode == 13) {
+                sendName(hub);
+            }
         });
         $('#flip').click(function () {
             hub.server.flipCards();
@@ -88,6 +100,12 @@ $(document).ready(function () {
     })
 });
 
+function sendName(hub) {
+    //close modal
+    $('#nameModal').modal('hide');
+    hub.server.setName($('#name').val());
+}
+
 function reset() {
     $("#game-board,#score").empty();
     $("#players li").removeClass("card-played");
@@ -100,8 +118,14 @@ function flipCards(players) {
 
 function showPlayers(players) {
     for (var p in players) {
-        if (players.hasOwnProperty(p)){
-            $("#players").append($("<li value='"+players[p].id+"'>"+players[p].name+"</li>"));
+        if (players.hasOwnProperty(p)) {
+            if (players[p].role === "moderator") {
+                $("#players").append($("<li value='" + players[p].id + "'><span class='glyphicon glyphicon-user pull-right'></span><span>" + players[p].name + "</span></li>"));
+
+            }
+            else {
+                $("#players").append($("<li value='" + players[p].id + "'>" + players[p].name + "</li>"));
+            }
         }
     }
 }

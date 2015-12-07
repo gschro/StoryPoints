@@ -1,8 +1,4 @@
-﻿.card-options{
-
-}
-
-.card-container{
+﻿.card-container{
     border: solid 4px #00ffff;
     border-radius: 5px;
     display: inline-block;
@@ -23,4 +19,37 @@
     position: relative;
     top: -20px;
     background-color: lightgreen;
+}
+
+.score-col{
+    height:100%
+}
+
+#score{
+    padding: 34px 0px 34px 0px;
+    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+    margin: 3px;
+}
+
+#game-board{
+    min-height: 131px;
+}
+
+#players{
+    list-style: none;
+}
+
+#players:hover{
+    background-color: lightgreen;
+    cursor: pointer;
+}
+
+.players-col ul{
+    padding-left: 3px;
+}
+
+.glyphicon-user{
+    margin: 3px 3px 0px 0px;
 }

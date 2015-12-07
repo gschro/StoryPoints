@@ -48,6 +48,7 @@ namespace StoryPoints.Hubs
                 player = new Player();
                 player.connections.Add(Context.ConnectionId);
                 player.groupId = url;
+                player.id = Context.ConnectionId;
 
                 //Add the player to the game
                 games[pc.groupId].players.TryAdd(pc.pcid, player);
@@ -109,7 +110,7 @@ namespace StoryPoints.Hubs
             return base.OnDisconnected(stopCalled);
         }
 
-        public void GetName(string name)
+        public void SetName(string name)
         {
             PlayerConnection pc = connections[Context.ConnectionId];
             games[pc.groupId].players[pc.pcid].name = name;
