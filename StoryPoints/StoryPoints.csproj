@@ -155,10 +155,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Classes\Game.cs" />
     <Compile Include="Classes\Integration.cs" />
     <Compile Include="Classes\Player.cs" />
     <Compile Include="Classes\PlayerConnection.cs" />
+    <Compile Include="Classes\Game.cs" />
     <Compile Include="Controllers\SiteController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
