@@ -15,8 +15,12 @@
     cursor: pointer;
 }
 
+.card-blue{
+    background-color: aqua;
+}
+
 .card-selected{
-    border-color: lightgreen;
+    border-color: #5cb85c;
 }
 
 .card-up{
@@ -27,6 +31,8 @@
 .played-card{
     vertical-align: top;
     width: 80px;
+    display: inline-block;
+    margin: 3px;
 }
 
 .card-owner{

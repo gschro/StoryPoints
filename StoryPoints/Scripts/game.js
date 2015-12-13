@@ -16,7 +16,6 @@ var cards = {
 }
 
 deck.cards = {
-    //1: { id: 1, displayValue: "1/2", value:.5, color: "blue" },
     2: { id: 2, displayValue: "1", value: 1, color: "blue" },
     3: { id: 3, displayValue: "2", value: 2, color: "blue" },
     4: { id: 4, displayValue: "3", value: 3, color: "blue" },
@@ -27,6 +26,17 @@ deck.cards = {
     9: { id: 9, displayValue: "40", value: 40, color: "blue" },
     10: { id: 10, displayValue: "100", value: 100, color: "blue" },
     11: { id: 11, displayValue: "P", value: "P", color: "blue" }
+}
+
+deck.getScore = function (avg) {
+    for (var c in this.cards) {
+        if (this.cards.hasOwnProperty(c)) {
+            if (avg <= this.cards[c].value) {
+                return this.cards[c].displayValue;
+            }
+        }
+    }
+    return null;
 }
 
 displayCardOptions(deck.cards);
@@ -41,19 +51,19 @@ for (var c in cards) {
 function displayCardOptions(cards){
     for (var card in cards) {
         if (deck.cards.hasOwnProperty(card)) {        
-            $('#card-options').append(createCard(cards[card]));
+            $('#card-options').append(createCard(cards[card],""));
         }
     }
     $('#card-options .card-back').addClass('hidden');
 }
 
-function createCard(card) {
-    return $('<div class="card-container" value="'+card.id+'"><div class="card-front">'+card.displayValue+'</div><div class="card-back">SP</div></div>');
+function createCard(card,color) {
+    return $('<div class="card-container '+color+'" value="'+card.id+'"><div class="card-front">'+card.displayValue+'</div><div class="card-back">SP</div></div>');
 }
 
 function createPlayedCard(player) {
     var $card = $('<div class="played-card"><div class="card-owner" value="'+player.id+'">' + player.name + '</div></div>');
-    return $card.prepend(createCard(deck.cards[player.cardId]));
+    return $card.prepend(createCard(deck.cards[player.cardId],"card-blue"));
 }
 
 $(function () {
@@ -158,31 +168,77 @@ function showCards(players) {
 function reset() {
     $("#game-board").empty();
     $("#score").text("-");
+    $("#score2").text("");
     $("#players li").removeClass("card-played");
     $(".card-container").removeClass("card-selected");
     $('.card-container').removeClass('card-up');
+    $('.card-container').attr('style', '');
 }
 
 function flipCards() {
     $("#game-board .card-back").addClass('hidden');
     $("#game-board .card-front").removeClass('hidden');
     $('.card-container').removeClass('card-up');
-
+    $('.card-container').removeClass('card-blue');
     scoreCards();
 }
 
 function scoreCards() {
-   
-    $('#game-board .card-played').each(function () {
-
+    var cardCounts = {};
+    var total = 0;
+    var pass = 0;
+    $('#game-board .played-card').each(function () {
+        var cardId = $(this).children('.card-container').attr('value');
+        if (deck.cards[cardId].value === "P") {
+            pass++;
+        }
+        else {
+            total += deck.cards[cardId].value;
+        }
+        if (cardCounts.hasOwnProperty(cardId)) {
+            cardCounts[cardId] += 1;
+        }
+        else{
+            cardCounts[cardId] = 1;
+        }
 
     });
-    $('#score').text('4');
+    var playedCards = $('#game-board .played-card').length;
+    var avg;
+    if (playedCards == pass) {
+        avg = "P";
+    }
+    else{
+        avg = total / (playedCards - pass);
+    }
+    var score1;
+    var score2;
+    if (avg === "P") {
+        score1 = avg;
+        score2 = "";
+    }
+    else {
+        score1 = deck.getScore(avg);
+        score2 = avg.toFixed(1) + ' Average';
+    }
+    graphCards(cardCounts, playedCards);
+    $('#score').text(score1);
+    $('#score2').text(score2);
+}
+
+function graphCards(cardCounts, playedCards) {
+    for (var c in cardCounts) {
+        if (cardCounts.hasOwnProperty(c)) {
+            var percent = (cardCounts[c] / playedCards) * 100;
+            $('#card-options .card-container[value=' + c + ']').attr('style', 'background: linear-gradient(to top, #90EE90 ' + percent.toFixed(2) + '%, #ffffff 0%);');
+        }
+    }
 }
 
 function showPlayers(players) {
+    $("#players").empty();
     for (var p in players) {
-        if (players.hasOwnProperty(p)) {
+        if (players.hasOwnProperty(p) && players[p].name != null) {
             if (players[p].role === "moderator") {
                 $("#players").append($("<li value='" + players[p].id + "'><span class='glyphicon glyphicon-user pull-right'></span><span>" + players[p].name + "</span></li>"));
 
