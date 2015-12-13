@@ -121,7 +121,8 @@ namespace StoryPoints.Hubs
         public void Reset()
         {
             PlayerConnection pc = connections[Context.ConnectionId];
-            if (games[pc.groupId].players[pc.pcid].role.Equals("moderator")) { 
+            if (games[pc.groupId].players[pc.pcid].role.Equals("moderator")) {
+                games[pc.groupId].reset();
                 Clients.Group(pc.groupId).reset();
             }
         }
@@ -131,7 +132,17 @@ namespace StoryPoints.Hubs
             PlayerConnection pc = connections[Context.ConnectionId];
             if (games[pc.groupId].players[pc.pcid].role.Equals("moderator"))
             {
+                games[pc.groupId].cardsFlipped = true;
                 Clients.Group(pc.groupId).flipCards();
+            }
+        }
+
+        public void PlayCard(string cardId)
+        {
+            PlayerConnection pc = connections[Context.ConnectionId];
+            if (!games[pc.groupId].cardsFlipped) { 
+                games[pc.groupId].players[pc.pcid].cardId = cardId;
+                Clients.Group(pc.groupId).cardPlayed(games[pc.groupId].players.Values);
             }
         }
 

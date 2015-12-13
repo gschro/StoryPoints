@@ -11,14 +11,26 @@
 }
 
 .card-container:hover{
-    background-color: lightgreen;
+    border-color: lightgreen;
     cursor: pointer;
 }
 
 .card-selected{
+    border-color: lightgreen;
+}
+
+.card-up{
     position: relative;
     top: -20px;
-    background-color: lightgreen;
+}
+
+.played-card{
+    vertical-align: top;
+    width: 80px;
+}
+
+.card-owner{
+    text-align: center;
 }
 
 .score-col{
