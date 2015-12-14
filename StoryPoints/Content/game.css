@@ -59,13 +59,17 @@
     list-style: none;
 }
 
-#players:hover{
+#players li:hover{
     background-color: lightgreen;
     cursor: pointer;
 }
 
 .players-col ul{
     padding-left: 3px;
+}
+
+.players-col ul li{
+    margin: 3px;
 }
 
 .glyphicon-user{

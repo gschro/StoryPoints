@@ -143,8 +143,8 @@ $(function () {
                 hub.server.playCard($card.attr('value'));
             }
         });
-        $(document).on('click', '.players li', function (e) {
-            hub.server.handOffModerator($(e.target).val());
+        $(document).on('click', '#players li', function (e) {
+            hub.server.handOffModerator($(e.target).attr('value'));
         });
         $(document).on('change', '#cardsInPlay input', function (e) {
             var cardId = $(this).val();

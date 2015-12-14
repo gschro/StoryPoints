@@ -71,41 +71,58 @@ namespace StoryPoints.Hubs
 
         public override System.Threading.Tasks.Task OnDisconnected(bool stopCalled)
         {
-            PlayerConnection pc = connections[Context.ConnectionId];
-            //disconnect player
-            Player p = games[pc.groupId].players[pc.pcid];
+            if (connections.ContainsKey(Context.ConnectionId)) { 
+                PlayerConnection pc = connections[Context.ConnectionId];
+                //disconnect player
+                if (games.ContainsKey(pc.groupId)) { 
+                    Player p = games[pc.groupId].players[pc.pcid];
 
-            if (!stopCalled)
-            {
-                //store player for possible reconnect
-                //  disconPlayers.TryAdd(Context.ConnectionId, p);
-                //set time out to look for reconnection
-                //timeouts.TryAdd(Context.ConnectionId, new DateTime());
+                    if (!stopCalled)
+                    {
+                        //store player for possible reconnect
+                        //  disconPlayers.TryAdd(Context.ConnectionId, p);
+                        //set time out to look for reconnection
+                        //timeouts.TryAdd(Context.ConnectionId, new DateTime());
+                    }
+
+                    PlayerConnection garbage;
+                    Player trash;
+                    //Remove player connection for the player
+                    connections.TryRemove(Context.ConnectionId, out garbage);
+
+                    if (p.connections.Count == 1)
+                    {
+                        //remove player
+                        games[pc.groupId].players.TryRemove(pc.pcid, out trash);
+                    }
+                    else
+                    {
+                        //remove disconnected connection
+                        games[pc.groupId].players[pc.pcid].connections.Remove(Context.ConnectionId);
+                    }
+
+                    //if no more players in game remove game
+                    if (games[pc.groupId].players.Count == 0)
+                    {
+                        Game garbageGame;
+                        games.TryRemove(pc.groupId, out garbageGame);
+                    }
+                    else
+                    {   //Hand off moderation if moderator left
+                        if (p.role.Equals("moderator"))
+                        {
+                            foreach(Player pl in games[pc.groupId].players.Values)
+                            {
+                                if (!pl.id.Equals(p.id))
+                                {
+                                    games[pc.groupId].players[pl.id].role = "moderator";
+                                }
+                            }
+                        }
+                    }
+                    Clients.Group(pc.groupId).showPlayers(games[pc.groupId].players);
+                }
             }
-
-            PlayerConnection garbage;
-            Player trash;
-            //Remove player connection for the player
-            connections.TryRemove(Context.ConnectionId, out garbage);
-
-            if (p.connections.Count == 1)
-            {
-                //remove player
-                games[pc.groupId].players.TryRemove(pc.pcid, out trash);
-            }
-            else
-            {
-                //remove disconnected connection
-                games[pc.groupId].players[pc.pcid].connections.Remove(Context.ConnectionId);
-            }
-
-            //if no more players in game remove game
-            if (games[pc.groupId].players.Count == 0)
-            {
-                Game garbageGame;
-                games.TryRemove(pc.groupId, out garbageGame);
-            }
-
 
             return base.OnDisconnected(stopCalled);
         }
@@ -163,6 +180,7 @@ namespace StoryPoints.Hubs
                 {
                     Clients.Client(conn).isPlayer();
                 }
+                Clients.Group(pc.groupId).showPlayers(games[pc.groupId].players);
             }
         }
 
