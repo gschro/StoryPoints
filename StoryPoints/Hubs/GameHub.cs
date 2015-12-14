@@ -166,6 +166,16 @@ namespace StoryPoints.Hubs
             }
         }
 
+        public void UpdateDeck(dynamic cards)
+        {
+            PlayerConnection pc = connections[Context.ConnectionId];
+            if (games[pc.groupId].players[pc.pcid].role.Equals("moderator"))
+            {
+                games[pc.groupId].reset();
+                Clients.Group(pc.groupId).updateDeck(cards);
+            }
+        }
+
         private void tryAddGame(string gameId)
         {
             if(games == null)

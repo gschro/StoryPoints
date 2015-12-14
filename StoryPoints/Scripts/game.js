@@ -44,11 +44,12 @@ displayCardOptions(deck.cards);
 for (var c in cards) {
     if(cards.hasOwnProperty(c)){
         var checked = deck.cards.hasOwnProperty(c) ? 'checked' : '';
-        $("#cardsInPlay").append('<input type="checkbox" ' + checked + '/> <label>' + cards[c].displayValue + '</label>');
+        $("#cardsInPlay").append('<input type="checkbox" value="'+cards[c].id+'" ' + checked + '/> <label>' + cards[c].displayValue + '</label>');
     }
 }
 
-function displayCardOptions(cards){
+function displayCardOptions(cards) {
+    $('#card-options').empty();
     for (var card in cards) {
         if (deck.cards.hasOwnProperty(card)) {        
             $('#card-options').append(createCard(cards[card],""));
@@ -79,6 +80,12 @@ $(function () {
         $('#nameModal').on('shown.bs.modal', function () {
             $('#name').focus();
         });
+    }
+
+    hub.client.updateDeck = function (cards) {
+        deck.cards = cards;
+        displayCardOptions(deck.cards);
+        reset();
     }
 
     hub.client.cardPlayed = function (players) {
@@ -128,7 +135,6 @@ $(function () {
                 $('.card-container').removeClass('card-selected');
                 $('.card-container').removeClass('card-up');
                 var $card = $(e.target);
-                console.log('in ' + $card);
                 if (!$card.hasClass('card-container')) {
                     $card = $card.parent();
                 }
@@ -139,6 +145,20 @@ $(function () {
         });
         $(document).on('click', '.players li', function (e) {
             hub.server.handOffModerator($(e.target).val());
+        });
+        $(document).on('change', '#cardsInPlay input', function (e) {
+            var cardId = $(this).val();
+            if ($(this).is(':checked')) {
+                if (!deck.cards.hasOwnProperty(cardId) && cards.hasOwnProperty(cardId)) {
+                    deck.cards[cardId] = cards[cardId];
+                }
+            }
+            else {
+                if (deck.cards.hasOwnProperty(cardId)) {
+                    delete deck.cards[cardId];
+                }
+            }
+            hub.server.updateDeck(deck.cards);
         });
     });
 });

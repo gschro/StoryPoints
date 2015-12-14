@@ -10,7 +10,7 @@
     margin: 3px;
 }
 
-.card-container:hover{
+#card-options .card-container:hover{
     border-color: lightgreen;
     cursor: pointer;
 }
