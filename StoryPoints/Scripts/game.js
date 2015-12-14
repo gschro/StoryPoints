@@ -102,10 +102,14 @@ $(function () {
 
     hub.client.isModerator = function () {
         //reset game board
+        $('.mod').removeClass('hidden');
+        $('.player').addClass('hidden');
     }
 
     hub.client.isPlayer = function () {
         //reset game board
+        $('.player').removeClass('hidden');
+        $('.mod').addClass('hidden');
     }
 
     hub.client.showPlayers = function (players) {

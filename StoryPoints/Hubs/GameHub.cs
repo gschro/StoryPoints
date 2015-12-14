@@ -60,21 +60,23 @@ namespace StoryPoints.Hubs
             {
                 //make the player the moderator
                 games[pc.groupId].players[pc.pcid].role = "moderator";
+                Clients.Client(Context.ConnectionId).isModerator();
             }
             else
             {
                 //make the player a participant
                 games[pc.groupId].players[pc.pcid].role = "player";
+                Clients.Client(Context.ConnectionId).isPlayer();
             }
 
         }
 
         public override System.Threading.Tasks.Task OnDisconnected(bool stopCalled)
         {
-            if (connections.ContainsKey(Context.ConnectionId)) { 
+            if (connections != null && connections.ContainsKey(Context.ConnectionId)) { 
                 PlayerConnection pc = connections[Context.ConnectionId];
                 //disconnect player
-                if (games.ContainsKey(pc.groupId)) { 
+                if (games != null && games.ContainsKey(pc.groupId)) { 
                     Player p = games[pc.groupId].players[pc.pcid];
 
                     if (!stopCalled)
