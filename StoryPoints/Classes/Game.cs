@@ -33,7 +33,7 @@ namespace StoryPoints.Classes
         {
             foreach (Player p in this.players.Values)
             {
-                if (p.role.Equals("moderator"))
+                if (p.role != null && p.role.Equals("moderator"))
                 {
                     return true;
                 }

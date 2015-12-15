@@ -122,7 +122,9 @@ namespace StoryPoints.Hubs
                             }
                         }
                     }
-                    Clients.Group(pc.groupId).showPlayers(games[pc.groupId].players);
+                    if (games.ContainsKey(pc.groupId)) { 
+                        Clients.Group(pc.groupId).showPlayers(games[pc.groupId].players);
+                    }
                 }
             }
 
@@ -168,21 +170,24 @@ namespace StoryPoints.Hubs
         public void HandOffModerator(string pcid)
         {
             PlayerConnection pc = connections[Context.ConnectionId];
-            if (games[pc.groupId].players[pc.pcid].role.Equals("moderator"))
+            Player p = games[pc.groupId].players[pc.pcid];
+            if (p.role.Equals("moderator"))
             {
-                games[pc.groupId].players[pcid].role = "moderator";
-                Player newMod = games[pc.groupId].players[pcid];
-                foreach (string conn in newMod.connections)
-                {
-                    Clients.Client(conn).isModerator();
-                }
+                if (!pcid.Equals(p.id)) { 
+                    games[pc.groupId].players[pcid].role = "moderator";
+                    Player newMod = games[pc.groupId].players[pcid];
+                    foreach (string conn in newMod.connections)
+                    {
+                        Clients.Client(conn).isModerator();
+                    }
 
-                games[pc.groupId].players[pc.pcid].role = "player";
-                foreach(string conn in games[pc.groupId].players[pc.pcid].connections)
-                {
-                    Clients.Client(conn).isPlayer();
+                    games[pc.groupId].players[pc.pcid].role = "player";
+                    foreach(string conn in games[pc.groupId].players[pc.pcid].connections)
+                    {
+                        Clients.Client(conn).isPlayer();
+                    }
+                    Clients.Group(pc.groupId).showPlayers(games[pc.groupId].players);
                 }
-                Clients.Group(pc.groupId).showPlayers(games[pc.groupId].players);
             }
         }
 

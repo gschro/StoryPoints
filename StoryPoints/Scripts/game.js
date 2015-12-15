@@ -44,7 +44,7 @@ displayCardOptions(deck.cards);
 for (var c in cards) {
     if(cards.hasOwnProperty(c)){
         var checked = deck.cards.hasOwnProperty(c) ? 'checked' : '';
-        $("#cardsInPlay").append('<input type="checkbox" value="'+cards[c].id+'" ' + checked + '/> <label>' + cards[c].displayValue + '</label>');
+        $("#cardsInPlay").append('<div><input type="checkbox" value="'+cards[c].id+'" ' + checked + '/> <span class=""><label class="card-front">' + cards[c].displayValue + '</label></span></div>');
     }
 }
 
@@ -184,6 +184,7 @@ function showCards(players) {
     for (var i = 0; i < players.length; i++) {
         if (players[i].cardId != null) {
             $("#game-board").append(createPlayedCard(players[i]));
+            $("#players li[value=" + players[i].id + "]").addClass("card-played");
         }
     }
     $('#game-board .card-front').addClass('hidden');
@@ -211,43 +212,45 @@ function scoreCards() {
     var cardCounts = {};
     var total = 0;
     var pass = 0;
-    $('#game-board .played-card').each(function () {
-        var cardId = $(this).children('.card-container').attr('value');
-        if (deck.cards[cardId].value === "P") {
-            pass++;
+    if ($('#game-board .played-card').length > 0) {
+        $('#game-board .played-card').each(function () {
+            var cardId = $(this).children('.card-container').attr('value');
+            if (deck.cards[cardId].value === "P") {
+                pass++;
+            }
+            else {
+                total += deck.cards[cardId].value;
+            }
+            if (cardCounts.hasOwnProperty(cardId)) {
+                cardCounts[cardId] += 1;
+            }
+            else {
+                cardCounts[cardId] = 1;
+            }
+
+        });
+        var playedCards = $('#game-board .played-card').length;
+        var avg;
+        if (playedCards == pass) {
+            avg = "P";
         }
         else {
-            total += deck.cards[cardId].value;
+            avg = total / (playedCards - pass);
         }
-        if (cardCounts.hasOwnProperty(cardId)) {
-            cardCounts[cardId] += 1;
+        var score1;
+        var score2;
+        if (avg === "P") {
+            score1 = avg;
+            score2 = "";
         }
-        else{
-            cardCounts[cardId] = 1;
+        else {
+            score1 = deck.getScore(avg);
+            score2 = avg.toFixed(1) + ' Average';
         }
-
-    });
-    var playedCards = $('#game-board .played-card').length;
-    var avg;
-    if (playedCards == pass) {
-        avg = "P";
+        graphCards(cardCounts, playedCards);
+        $('#score').text(score1);
+        $('#score2').text(score2);
     }
-    else{
-        avg = total / (playedCards - pass);
-    }
-    var score1;
-    var score2;
-    if (avg === "P") {
-        score1 = avg;
-        score2 = "";
-    }
-    else {
-        score1 = deck.getScore(avg);
-        score2 = avg.toFixed(1) + ' Average';
-    }
-    graphCards(cardCounts, playedCards);
-    $('#score').text(score1);
-    $('#score2').text(score2);
 }
 
 function graphCards(cardCounts, playedCards) {

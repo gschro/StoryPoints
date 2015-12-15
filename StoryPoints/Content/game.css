@@ -1,5 +1,5 @@
 ﻿.card-container{
-    border: solid 4px #00ffff;
+    border: solid 4px #337ab7;
     border-radius: 5px;
     display: inline-block;
     padding: 30px 0px 30px 0px;
@@ -11,16 +11,16 @@
 }
 
 #card-options .card-container:hover{
-    border-color: lightgreen;
+    border-color: #f0ad4e;
     cursor: pointer;
 }
 
 .card-blue{
-    background-color: aqua;
+    background-color: #337ab7;
 }
 
 .card-selected{
-    border-color: #5cb85c;
+    border-color: #f0ad4e;
 }
 
 .card-up{
@@ -35,24 +35,40 @@
     margin: 3px;
 }
 
+.card-back{
+    color: #ffffff;
+}
+
 .card-owner{
     text-align: center;
 }
 
-.score-col{
-    height:100%
+.score-col, .card-options-col{
+    height:100%;
+    margin: 23px 0px 3px 0px;
+    padding: 3px 0px 3px 0px;
 }
 
 #score{
     padding: 34px 0px 34px 0px;
     font-size: 40px;
     font-weight: bold;
-    text-align: center;
     margin: 3px;
+    height: 105px;
+}
+
+#score2{
+    height: 20px;
+}
+
+#score, #score2{
+    text-align: center;
 }
 
 #game-board{
-    min-height: 131px;
+    min-height: 160px;
+    margin: 3px 0px 3px 0px;
+    padding: 3px 0px 3px 0px;
 }
 
 #players{
@@ -60,7 +76,7 @@
 }
 
 #players li:hover{
-    background-color: lightgreen;
+    background-color: #90EE90;
     cursor: pointer;
 }
 
@@ -69,9 +85,35 @@
 }
 
 .players-col ul li{
+    padding-left: 3px;
     margin: 3px;
+}
+
+.card-played{
+    background-color: #90EE90;
 }
 
 .glyphicon-user{
     margin: 3px 3px 0px 0px;
 }
+
+#cardsInPlay label{
+    display: block;
+}
+
+#cardsInPlay div{
+    display: inline-block;
+    margin: 10px;
+    text-align: center;
+}
+
+/*#cardsInPlay .card-container{
+    border: solid 4px #337ab7;
+    border-radius: 5px;
+    display: inline-block;
+    padding: 14px 0px 8px 0px;
+    text-align: center;    
+    font-size: 12px;
+    width: 38px;
+    margin: 3px;
+}*/
