@@ -28,5 +28,17 @@ namespace StoryPoints.Classes
             }
             cardsFlipped = false;
         }
+
+        public bool hasModerator()
+        {
+            foreach (Player p in this.players.Values)
+            {
+                if (p.role.Equals("moderator"))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

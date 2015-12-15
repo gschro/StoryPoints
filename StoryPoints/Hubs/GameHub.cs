@@ -54,9 +54,9 @@ namespace StoryPoints.Hubs
                 games[pc.groupId].players.TryAdd(pc.pcid, player);
                 Clients.Client(Context.ConnectionId).getName();
             }
-
+           
             //if new connection is the only player in the game
-            if(games[pc.groupId].players.Count == 1)
+            if(games[pc.groupId].players.Count == 1 || !games[pc.groupId].hasModerator())
             {
                 //make the player the moderator
                 games[pc.groupId].players[pc.pcid].role = "moderator";
