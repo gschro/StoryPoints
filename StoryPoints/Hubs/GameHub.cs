@@ -118,6 +118,7 @@ namespace StoryPoints.Hubs
                                 if (!pl.id.Equals(p.id))
                                 {
                                     games[pc.groupId].players[pl.id].role = "moderator";
+                                    break;
                                 }
                             }
                         }
