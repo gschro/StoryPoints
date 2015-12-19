@@ -171,6 +171,14 @@ $(document).ready(function () {
     $("#settings").click(function () {
         $("#settingsModal").modal();
     });
+    $(".score-col .glyphicon-pencil").click(function () {
+        $(".score-col .glyphicon-ok").removeClass("hiddden");
+        $(".score-col .glyphicon-pencil").addClass("hiddden");
+    });
+    $(".score-col .glyphicon-ok").click(function () {
+        $(".score-col .glyphicon-pencil").removeClass("hiddden");
+        $(".score-col .glyphicon-ok").addClass("hiddden");
+    });
 });
 
 function sendName(hub) {
