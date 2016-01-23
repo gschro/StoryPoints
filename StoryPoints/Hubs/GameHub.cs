@@ -149,6 +149,15 @@ namespace StoryPoints.Hubs
             }
         }
 
+        public void UpdateScore(double score)
+        {
+            PlayerConnection pc = connections[Context.ConnectionId];
+            if (games[pc.groupId].players[pc.pcid].role.Equals("moderator"))
+            {
+                Clients.Group(pc.groupId).updateScore(score);
+            }
+        }
+
         public void FlipCards()
         {
             PlayerConnection pc = connections[Context.ConnectionId];

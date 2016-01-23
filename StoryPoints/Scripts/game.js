@@ -116,6 +116,11 @@ $(function () {
         //Show connected players
         showPlayers(players);
     }
+
+    hub.client.updateScore = function (score) {
+        $('#score').text(score);
+        $('#score2').text('');
+    }
         
     // Start the connection.
     $.connection.hub.start().done(function () {
@@ -135,7 +140,7 @@ $(function () {
             hub.server.reset();
         });
         $(document).on('click', '#card-options .card-container,#card-options .card-front', function (e) {
-            if($('#score').text() === "-"){
+            if($('#score').text() === "-" && $('#scoreEdit').hasClass('hidden')){
                 $('.card-container').removeClass('card-selected');
                 $('.card-container').removeClass('card-up');
                 var $card = $(e.target);
@@ -164,22 +169,45 @@ $(function () {
             }
             hub.server.updateDeck(deck.cards);
         });
+        $('.glyphicon-ok').click(function () {
+            saveScoreEdit(hub);
+        });
+        $('#scoreEdit').keyup(function (e) {
+            if (e.keyCode == 13) {
+                saveScoreEdit(hub);
+            }
+        });
     });
 });
 
 $(document).ready(function () {
-    $("#settings").click(function () {
-        $("#settingsModal").modal();
+    $('#settings').click(function () {
+        $('#settingsModal').modal();
     });
-    $(".score-col .glyphicon-pencil").click(function () {
-        $(".score-col .glyphicon-ok").removeClass("hiddden");
-        $(".score-col .glyphicon-pencil").addClass("hiddden");
+    $('.glyphicon-pencil').click(function () {
+        $('.glyphicon-ok,#scoreEdit').removeClass('hidden');
+        $('.glyphicon-pencil,#score').addClass('hidden');
     });
-    $(".score-col .glyphicon-ok").click(function () {
-        $(".score-col .glyphicon-pencil").removeClass("hiddden");
-        $(".score-col .glyphicon-ok").addClass("hiddden");
+    $(document).on('click', '#card-options .card-container,#card-options .card-front', function (e) {
+        if(!$('#scoreEdit').hasClass('hidden')){
+            var $card = $(e.target);
+            if (!$card.hasClass('card-container')) {
+                $card = $card.parent();
+            }
+            var newScore = deck.cards[$card.attr('value')].value;
+            if (newScore === parseFloat(newScore, 10)) {
+                $('#scoreEdit').val(newScore);
+            }
+        }
     });
 });
+
+function saveScoreEdit(hub) {
+    $('#score').text($('#scoreEdit').val());
+    $('.glyphicon-pencil,#score').removeClass('hidden');
+    $('.glyphicon-ok,#scoreEdit').addClass('hidden');
+    hub.server.updateScore($('#scoreEdit').val());
+}
 
 function sendName(hub) {
     //close modal
@@ -201,6 +229,7 @@ function showCards(players) {
 function reset() {
     $("#game-board").empty();
     $("#score").text("-");
+    $("#scoreEdit").val(0);
     $("#score2").text("");
     $("#players li").removeClass("card-played");
     $(".card-container").removeClass("card-selected");
@@ -257,6 +286,7 @@ function scoreCards() {
         }
         graphCards(cardCounts, playedCards);
         $('#score').text(score1);
+        $('#scoreEdit').val(score1)
         $('#score2').text(score2);
     }
 }
