@@ -38,6 +38,12 @@ namespace StoryPoints
                 // return the route, or null to have it passed to the next routing engine in the list
                 return routeData;
             }
+            else if (url.Equals("/RandomGame"))
+            {
+                routeData.Values["controller"] = "Site";
+                routeData.Values.Add("action", "RandomGame");
+                return routeData;
+            }
             else if (url.Equals("/Error"))
             {
                 routeData.Values["controller"] = "Site";

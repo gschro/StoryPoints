@@ -209,6 +209,11 @@ function saveScoreEdit(hub) {
     hub.server.updateScore($('#scoreEdit').val());
 }
 
+function resetScoreEdit() {
+    $('.glyphicon-pencil,#score').removeClass('hidden');
+    $('.glyphicon-ok,#scoreEdit').addClass('hidden');
+}
+
 function sendName(hub) {
     //close modal
     $('#nameModal').modal('hide');
@@ -235,6 +240,7 @@ function reset() {
     $(".card-container").removeClass("card-selected");
     $('.card-container').removeClass('card-up');
     $('.card-container').attr('style', '');
+    resetScoreEdit();
 }
 
 function flipCards() {

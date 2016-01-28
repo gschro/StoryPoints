@@ -4,5 +4,53 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Story Points</h2>
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <form id="welcome" method="post" action="/RandomGame">
+            <h2>Welcome to Story Points</h2> <input type="submit" class="btn btn-success" value="Start a New Game">
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <h4>How to Play Scrum Poker</h4>
+        <ol>
+            <li>Give a brief overview of a user story and clarify as needed</li>
+            <li>Allow scrum team members to select a card to reflect the estimate for the story</li>
+            <li>When all cards have been placed face down in the playing area the moderator will flip the cards</li>
+            <li>The score is automatically calculated and the cards are revealed</li>
+            <li>Team members with the highest and lowest values state why they believe their estimates are correct</li>
+            <li>Repeat steps 3-5 until a consensus is reached</li>
+            <li>Repeat the process until all user stories have been estimated</li>
+        </ol>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <h4>Features</h4>
+        <ul>
+            <li>Web based and perfect for remote scrum teams</li>
+            <li>Player name is highlighted when a card is played for quick recognition of who needs more time</li>
+            <li>Round score and average is displayed to easily see </li>
+            <li>The card backgrounds fill with the percentage of players that chose that card after they have been flipped</li>
+            <li>Easy moderator handoff by clicking on their name in the list of players</li>
+            <li>Editable deck so you can play with the cards that work for your team</li>
+            <li>Mobile responsive</li>
+        </ul>
+    </div>
+</div>
 
+@*<div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <h4>Premium Features</h4>
+            <ul>
+                <li>Quick score edit by clicking on a card in your hand to update the score</li>
+                <li>Password protected games</li>
+                <li>Custom game url</li>
+                <li>Unlimited players</li>
+                <li>Integrations (Coming Soon)</li>
+            </ul>
+        </div>
+    </div>*@
+
+<link href="~/Content/index.css" rel="stylesheet" type="text/css" />

@@ -17,8 +17,8 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Story Points", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                </button>              
+                <a class="navbar-brand" href="/">Story Points</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -31,7 +31,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - Test</p>
+            <p>&copy; @DateTime.Now.Year - Story Points</p>
         </footer>
     </div>
 

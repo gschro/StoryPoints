@@ -19,9 +19,23 @@ namespace StoryPoints.Controllers
             return View();
         }
 
+        public ActionResult RandomGame()
+        {
+            string gameUrl = RandomString(7);
+            return Redirect("/" + gameUrl);
+        }
+
         public ActionResult Error()
         {
             return View();
+        }
+
+        private static string RandomString(int length)
+        {
+            const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var random = new Random();
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
         }
     }
 }
