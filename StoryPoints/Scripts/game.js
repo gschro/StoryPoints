@@ -67,9 +67,49 @@ function createPlayedCard(player) {
     return $card.prepend(createCard(deck.cards[player.cardId],"card-blue"));
 }
 
+function notifyUserOfDisconnect() {
+    console.log("reconnecting...hopefully");
+}
+
+function notifyUserOfConnectionProblem() {
+    console.log("slow connection");
+}
+
+var hub;
 $(function () {
     // Declare a proxy to reference the hub. 
-    var hub = $.connection.gameHub;    
+    hub = $.connection.gameHub;    
+
+    var tryingToReconnect = false;
+
+    $.connection.hub.reconnecting(function () {
+        console.log('reconnecting');
+        tryingToReconnect = true;
+    });
+
+    $.connection.hub.reconnected(function () {
+        console.log('reconnected');
+        tryingToReconnect = false;
+    });
+
+    $.connection.hub.connectionSlow(function () {
+        console.log('slow conn');
+        notifyUserOfConnectionProblem(); // Your function to notify user.
+    });
+
+    $.connection.hub.disconnected(function () {
+        console.log('disconnected');
+        if (tryingToReconnect) {
+            notifyUserOfDisconnect(); // Your function to notify user.
+        }
+        setTimeout(function () {
+            console.log('settimeout');
+            $.connection.hub.start().done(function () {
+                console.log('in reconnect start hub');
+                hub.server.newConnection(window.location.pathname);});
+        }, 5000); // Restart connection after 5 seconds.
+    });
+
 
     hub.client.getName = function () {
         //Show Name Modal
@@ -120,6 +160,11 @@ $(function () {
     hub.client.updateScore = function (score) {
         $('#score').text(score);
         $('#score2').text('');
+    }
+
+    hub.client.reconnect = function (url) {
+        //console.log(url)
+        hub.server.newConnection(window.location.pathname);
     }
         
     // Start the connection.

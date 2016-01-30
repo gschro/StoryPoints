@@ -71,6 +71,17 @@ namespace StoryPoints.Hubs
 
         }
 
+        //public override System.Threading.Tasks.Task OnReconnected()
+        //{
+        //    Clients.Client(Context.ConnectionId).reconnect();
+        //    return base.OnReconnected();
+        //}
+
+        public void Test(string url)
+        {
+            Clients.Client(Context.ConnectionId).reconnect(url);
+        }
+
         public override System.Threading.Tasks.Task OnDisconnected(bool stopCalled)
         {
             if (connections != null && connections.ContainsKey(Context.ConnectionId)) { 
