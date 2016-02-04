@@ -179,6 +179,16 @@ namespace StoryPoints.Hubs
             }
         }
 
+        //public void DisableCards()
+        //{
+        //    PlayerConnection pc = connections[Context.ConnectionId];
+        //    if (games[pc.groupId].players[pc.pcid].role.Equals("moderator"))
+        //    {
+        //        games[pc.groupId].cardsFlipped = true;
+        //        Clients.Group(pc.groupId).disableCards();
+        //    }
+        //}
+
         public void PlayCard(string cardId)
         {
             PlayerConnection pc = connections[Context.ConnectionId];

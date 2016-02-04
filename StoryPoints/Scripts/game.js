@@ -160,6 +160,8 @@ $(function () {
     hub.client.updateScore = function (score) {
         $('#score').text(score);
         $('#score2').text('');
+        $('#card-options .card-container:not(.card-selected)').addClass('inactive');
+        $('#card-options .card-container').addClass('nohover');
     }
 
     hub.client.reconnect = function (url) {
@@ -179,7 +181,9 @@ $(function () {
             }
         });
         $('#flip').click(function () {
-            hub.server.flipCards();
+            if ($('#game-board .card-container').length > 0) {
+                hub.server.flipCards();
+            }
         });
         $('#reset').click(function () {
             hub.server.reset();
@@ -285,15 +289,18 @@ function reset() {
     $(".card-container").removeClass("card-selected");
     $('.card-container').removeClass('card-up');
     $('.card-container').attr('style', '');
+    $('#card-options .card-container').removeClass('inactive nohover');
     resetScoreEdit();
 }
 
-function flipCards() {
+function flipCards() {    
+    $('#card-options .card-container:not(.card-selected)').addClass('inactive');
+    $('#card-options .card-container').addClass('nohover');
     $("#game-board .card-back").addClass('hidden');
     $("#game-board .card-front").removeClass('hidden');
     $('.card-container').removeClass('card-up');
     $('.card-container').removeClass('card-blue');
-    scoreCards();
+    scoreCards();    
 }
 
 function scoreCards() {
@@ -364,4 +371,13 @@ function showPlayers(players) {
             }
         }
     }
+    $("#players li").sort(asc_sort).appendTo('#players');
+}
+
+function asc_sort(a, b) {
+    return ($(b).text()) < ($(a).text()) ? 1 : -1;
+}
+
+function dec_sort(a, b) {
+    return ($(b).text()) > ($(a).text()) ? 1 : -1;
 }

@@ -121,6 +121,15 @@
     text-align: center;
 }
 
+.inactive{
+    /*opacity: 0.5;*/
+    border-color: gray;    
+}
+
+.nohover{
+    pointer-events: none;
+}
+
 @media screen and (min-width:700px) { 
     #card-options .card-container:hover{
         border-color: #f0ad4e;
