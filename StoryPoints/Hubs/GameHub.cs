@@ -60,13 +60,13 @@ namespace StoryPoints.Hubs
             {
                 //make the player the moderator
                 games[pc.groupId].players[pc.pcid].role = "moderator";
-                Clients.Client(Context.ConnectionId).isModerator();
+                Clients.Client(Context.ConnectionId).isModerator(games[pc.groupId].cardsFlipped);
             }
             else
             {
                 //make the player a participant
                 games[pc.groupId].players[pc.pcid].role = "player";
-                Clients.Client(Context.ConnectionId).isPlayer();
+                Clients.Client(Context.ConnectionId).isPlayer(games[pc.groupId].cardsFlipped);
             }
 
         }

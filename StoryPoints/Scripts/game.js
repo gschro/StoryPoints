@@ -63,7 +63,7 @@ function createCard(card,color) {
 }
 
 function createPlayedCard(player) {
-    var $card = $('<div class="played-card"><div class="card-owner" value="'+player.id+'">' + player.name + '</div></div>');
+    var $card = $('<div class="played-card" value="' + deck.cards[player.cardId].value + '"><div class="card-owner" value="' + player.id + '">' + player.name + '</div></div>');
     return $card.prepend(createCard(deck.cards[player.cardId],"card-blue"));
 }
 
@@ -73,6 +73,7 @@ function notifyUserOfDisconnect() {
 
 function notifyUserOfConnectionProblem() {
     console.log("slow connection");
+
 }
 
 var hub;
@@ -84,20 +85,36 @@ $(function () {
 
     $.connection.hub.reconnecting(function () {
         console.log('reconnecting');
+        $('#connection .glyphicon').removeClass();
+        $('#connection span:first()').addClass('glyphicon glyphicon-repeat');
+        $('#status').text(' Trying to Reconnect');
+
         tryingToReconnect = true;
     });
 
     $.connection.hub.reconnected(function () {
         console.log('reconnected');
+        $('#connection .glyphicon').removeClass();
+        $('#connection span:first()').addClass('glyphicon glyphicon-signal');
+        $('#status').text(' Connected');
+
         tryingToReconnect = false;
     });
 
     $.connection.hub.connectionSlow(function () {
         console.log('slow conn');
+        $('#connection .glyphicon').removeClass();
+        $('#connection span:first()').addClass('glyphicon glyphicon-ban-circle');
+        $('#status').text(' Warning Slow Connection');
+
         notifyUserOfConnectionProblem(); // Your function to notify user.
     });
 
     $.connection.hub.disconnected(function () {
+        $('#connection .glyphicon').removeClass();
+        $('#connection span:first()').addClass('glyphicon glyphicon-ban-circle');
+        $('#status').text(' Disconnected, trying to reach server');
+
         console.log('disconnected');
         if (tryingToReconnect) {
             notifyUserOfDisconnect(); // Your function to notify user.
@@ -106,7 +123,11 @@ $(function () {
             console.log('settimeout');
             $.connection.hub.start().done(function () {
                 console.log('in reconnect start hub');
-                hub.server.newConnection(window.location.pathname);});
+                hub.server.newConnection(window.location.pathname);
+                $('#connection .glyphicon').removeClass();
+                $('#connection span:first()').addClass('glyphicon glyphicon-signal');
+                $('#status').text(' Connected');
+            });
         }, 5000); // Restart connection after 5 seconds.
     });
 
@@ -140,16 +161,18 @@ $(function () {
         reset();
     }
 
-    hub.client.isModerator = function () {
+    hub.client.isModerator = function (flipped) {
         //reset game board
         $('.mod').removeClass('hidden');
         $('.player').addClass('hidden');
+        disableCards(flipped);
     }
 
-    hub.client.isPlayer = function () {
+    hub.client.isPlayer = function (flipped) {
         //reset game board
         $('.player').removeClass('hidden');
         $('.mod').addClass('hidden');
+        disableCards(flipped);
     }
 
     hub.client.showPlayers = function (players) {
@@ -300,7 +323,8 @@ function flipCards() {
     $("#game-board .card-front").removeClass('hidden');
     $('.card-container').removeClass('card-up');
     $('.card-container').removeClass('card-blue');
-    scoreCards();    
+    scoreCards();
+    sortCards();
 }
 
 function scoreCards() {
@@ -349,6 +373,10 @@ function scoreCards() {
     }
 }
 
+function sortCards(){
+    $("#game-board .played-card").sort(asc_sort_value).appendTo("#game-board");
+}
+
 function graphCards(cardCounts, playedCards) {
     for (var c in cardCounts) {
         if (cardCounts.hasOwnProperty(c)) {
@@ -378,6 +406,25 @@ function asc_sort(a, b) {
     return ($(b).text()) < ($(a).text()) ? 1 : -1;
 }
 
+function asc_sort_value(a, b) {
+    a = $(a).attr("value");
+    b = $(b).attr("value");
+    if (!isNaN(a)) {
+        a = parseFloat(a);
+    }
+    if (!isNaN(b)) {
+        b = parseFloat(b);
+    }
+    return b < a ? 1 : -1;
+}
+
 function dec_sort(a, b) {
     return ($(b).text()) > ($(a).text()) ? 1 : -1;
+}
+
+function disableCards(flipped){
+    if(flipped){
+        $('#card-options .card-container:not(.card-selected)').addClass('inactive');
+        $('#card-options .card-container').addClass('nohover');
+    }
 }
