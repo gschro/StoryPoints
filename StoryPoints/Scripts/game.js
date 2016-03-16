@@ -1,4 +1,10 @@
-﻿var stories = {};
+﻿$(document).ready(function () {
+    $('.initial-load').modal({
+        keyboard: false,
+        backdrop: 'static'
+    });
+});
+var stories = {};
 var deck = {};
 
 var cards = {
@@ -133,6 +139,7 @@ $(function () {
 
 
     hub.client.getName = function () {
+        $('.initial-load').modal('hide');
         //Show Name Modal
         $('#nameModal').modal({
             keyboard: false,

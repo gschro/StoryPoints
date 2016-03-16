@@ -141,3 +141,35 @@
         cursor: pointer;
     }
 }
+
+.initial-load span{
+    color: #ffffff;
+    font-size: 50px;
+    font-weight: bold;
+}
+
+.centered {
+  position: fixed; /* or absolute */
+  top: 50%;
+  left: Calc(50% - 153px);
+}
+
+.glyphicon-refresh-animate {
+   -webkit-animation-name: rotateThis;
+   -webkit-animation-duration: 2s;
+   -webkit-animation-iteration-count: infinite;
+   -webkit-animation-timing-function: linear;
+}
+
+@-webkit-keyframes "rotateThis" {
+ from { 
+        -webkit-transform: rotate( 0deg );  
+    }
+ to  { 
+        -webkit-transform: rotate( 360deg ); 
+    }
+}
+
+.centered .glyphicon-refresh{
+    margin-right: 20px;
+}
